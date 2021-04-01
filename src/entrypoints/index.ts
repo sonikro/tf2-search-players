@@ -10,11 +10,22 @@ const dependencies = {
     serverRepository: new JSONServerRepository(),
     serverQueryService: new SourceServerQuery(2000)
 }
+
+var twirlTimer = function () {
+    var P = ["\\", "|", "/", "-"];
+    var x = 0;
+    return setInterval(function () {
+        process.stdout.write("Finding player \r" + P[x++]);
+        x &= 3;
+    }, 250);
+};
+
 prompt.start();
 
 prompt.get(['nickname',], function (err, result) {
     if (err) { return onErr(err); }
 
+    twirlTimer()
     findServerByPlayerName(dependencies)(result.nickname as string)
         .then(servers => console.log(servers))
         .then(() => process.exit(0))
